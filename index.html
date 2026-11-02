@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ta"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>குடியியற் கல்வி – தவணைச் செயற்பாடுகளும் மதிப்பீட்டுப் புள்ளிகளும்</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;700&display=swap">
+<style>
+:root{--bg:#0b1220;--sl:#f7f4ee;--card:#fff;--ink:#14213d;--mut:#5b6675;--a:#e9a23b;--b:#1f8a8a;--c:#c8553d;--dk:#14213d;box-sizing:border-box}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--sl:#18233e;--card:#233252;--ink:#f1eee6;--mut:#b4bec9}}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);overflow:hidden;font-family:'Noto Sans Tamil',system-ui,sans-serif}
+#app{height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+#view{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#stage{position:relative;flex:none;transform-origin:center center}
+.sl{position:absolute;inset:0;background:var(--sl);color:var(--ink);padding:44px 56px;display:none;flex-direction:column;gap:20px;line-height:1.55;overflow:hidden;border-radius:12px}
+.sl.on{display:flex;animation:in .35s}@keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+h1{font-size:50px;line-height:1.3;margin:0}h2{font-size:36px;margin:0;line-height:1.35}
+.k{font-weight:700;font-size:24px;color:var(--a);letter-spacing:.5px}
+.hero{background:linear-gradient(135deg,#14213d 55%,#1f6f78);color:#f7f4ee;justify-content:center}
+.hero p{font-size:28px;margin:0;opacity:.9}
+.tags{display:flex;flex-wrap:wrap;gap:12px}.tags span{background:#ffffff22;border:1px solid #ffffff55;border-radius:999px;padding:6px 22px;font-size:26px}
+.cards{display:flex;gap:18px;flex:1}.cards.v{flex-direction:column}
+.tc{flex:1;background:var(--card);border-radius:18px;padding:24px;border-top:10px solid var(--b);cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:.2s}
+.tc:nth-child(2){border-top-color:var(--a)}.tc:nth-child(3){border-top-color:var(--c)}.tc:hover{transform:translateY(-6px)}
+.tc b{font-size:30px}.tc .n{font-size:84px;font-weight:700;line-height:1.1;color:var(--b)}.tc:nth-child(2) .n{color:var(--a)}.tc:nth-child(3) .n{color:var(--c)}
+.tc small{font-size:22px;color:var(--mut)}
+.bars{display:flex;flex-direction:column;gap:14px;flex:1;justify-content:center}
+.br{display:flex;flex-direction:column;gap:4px;font-size:26px}.br div{height:34px;background:#8883;border-radius:10px;overflow:hidden}
+.br i{display:block;height:100%;width:0;background:var(--cc,var(--b));border-radius:10px;color:#fff;font-style:normal;font-size:22px;text-align:right;padding-right:12px;line-height:34px;font-weight:700}
+.on .br i{animation:g 1s .2s forwards}@keyframes g{to{width:var(--w)}}
+.tot{font-size:26px;color:var(--mut)}.tot b{color:var(--b);font-size:34px}
+.pill{display:inline-block;background:var(--cc,var(--b));color:#fff;border-radius:999px;padding:4px 22px;font-size:24px;font-weight:700}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.box{background:var(--card);border-radius:16px;padding:20px 26px;font-size:29px;border-left:10px solid var(--cc,var(--b));line-height:1.6}
+.box h3{margin:0 0 8px;font-size:24px;color:var(--cc,var(--b))}.box ul{margin:0;padding-left:28px}.box li{margin:6px 0}
+.pts{margin-left:auto;text-align:center;background:var(--dk);color:#f7f4ee;border-radius:16px;padding:6px 26px;font-size:20px}.pts b{display:block;font-size:42px;color:var(--a);line-height:1.1}
+.dots2{display:flex;gap:8px;margin-top:auto}.dots2 i{height:8px;flex:1;border-radius:4px;background:#8883}.dots2 i.o{background:var(--cc,var(--b))}
+#prog{height:5px;background:#1b2740}#prog i{display:block;height:100%;width:0;background:var(--a);transition:.3s}
+#bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:#080d19}
+#bar button{font:inherit;font-size:18px;color:#14213d;font-weight:700;background:var(--a);border:0;border-radius:999px;padding:10px 22px;cursor:pointer;min-width:84px}
+#bar button:disabled{opacity:.35}#bar button.g{background:#2b3956;color:#fff;min-width:0;padding:10px 14px}
+#n{color:#c8d0dc;font-size:15px;min-width:52px;text-align:center}
+</style></head><body>
+<div id="app"><div id="view"><div id="stage"></div></div><div id="prog"><i id="pi"></i></div>
+<div id="bar"><button id="pv">◀ முன்</button><span id="n"></span><button id="nx">அடுத்தது ▶</button><button class="g" id="fs" title="முழுத்திரை">⛶</button></div></div>
+<script>
+const T=[
+{n:"முதலாந் தவணை",th:"எமது பாடசாலை",col:"#1f8a8a",a:[["பாடசாலையை அறிந்து கொள்வோம்",20],["பாடசாலைக் கலாசாரத்துக்கு இயைபடைவோம்",20],["பாடசாலையின் ஒழுங்கமைப்புக் கட்டமைப்பினை அறிந்து கொள்வோம்",16],["சமூகத்துடன் ஒன்றிணைந்து பாடசாலையைக் கட்டியெழுப்புவோம்",20],["எதிர்காலப் பாடசாலையின் பிரதிமையை மனதில் கட்டியெழுப்புவோம்",16],["நான் எனது இயல்பை அறிந்து கொள்வேன்",20]]},
+{n:"இரண்டாந் தவணை",th:"நமது தாய்நாடு",col:"#e9a23b",a:[
+["அழகிய கிராமத்தை உருவாக்குவோம்",20,["தாம் வசிக்கும் பிரதேசத்தின் அடிப்படைத் தகவல்களைத் தேடியறிவர்.","பல்வேறு தரவுகளையும் மூலாதாரங்களையும் பகுப்பாய்வு செய்து, தமது பிரதேசம் எதிர்நோக்கியுள்ள சவால்களை இனங்கண்டு, அவற்றுக்குப் பொருத்தமான தீர்வுகளை முன்வைப்பர்."],6],
+["வேலை உலகின் நவீனத்துவத்தை அறிந்து கொள்வோம்",20,["தமது பிரதேசத்தில் நிலவும் வேலையுலகின் நவீனத்துவத்தை அறிந்து கொள்வதன் முக்கியத்துவத்தை மதிப்பர்."],3],
+["நமது கரங்களால் நமது நாட்டைக் கட்டியெழுப்புவோம்",16,["தாய்நாட்டின் அபிவிருத்திக்குப் பங்களிக்கும் பிரசையின் பொறுப்புக்களை நிறைவேற்றுவர்.","பெருமைமிகு பிரசையொருவர் என்ற வகையில் தனது தாய்நாட்டின் பாதுகாப்பை உறுதிப்படுத்துவதற்காகச் செயற்றிறனுடன் பங்கேற்பர்."],3]]},
+{n:"மூன்றாந் தவணை",th:"வாழ்க்கைக்குச் சட்டம்",col:"#c8553d",a:[
+["சட்டத்தை அறிந்து கொள்வோம்",16,["ஒழுக்கமுள்ள சமூகமொன்றைக் கட்டியெழுப்புவதற்காகச் சட்டத்தைப் பற்றிய அறிவையும் அதனைப் பின்பற்றுதலின் முக்கியத்துவத்தையும் விளக்குவர்."],2],
+["சட்டத்தை அறிந்தோர் வாழ்க்கையை வெல்வோர்",16,["சமூகநன்மைக்காகவே சட்டம் காணப்படுகின்றது என்பதற்கான கருத்துக்களை முன்வைப்பர்."],3],
+["சட்டரீதியான ஆவணங்களைப் பொறுப்புடன் பயன்படுத்துவோம்",16,["அன்றாட வாழ்க்கையில் முக்கியத்துவம் பெறும் சட்டரீதியான ஆவணங்களைச் சரியாகவும், உரிய வகையிலும், பொறுப்புடன் கூடியவாறும் பயன்படுத்துவர்."],2],
+["சட்டத்தை மதிக்கும் நற்பிரசைகளாவோம்",16,["அன்றாட வாழ்க்கையில் சட்டத்தை மதித்துச் செயற்படுவதன் மூலம் நற்பிரசைக்குரிய பண்புகளை மேம்படுத்திக் கொள்வர்."],3],
+["நல்வாழ்வினூடாகத் தேசிய அபிவிருத்திக்குப் பங்களிப்புச் செய்வோம்",16,["நற்பிரசையின் குணவியல்புகளுக்கு இயைந்து தேசிய அபிவிருத்திக்குப் பங்களிப்புச் செய்வர்."],2]]}];
+const S=[],tot=t=>t.a.reduce((s,x)=>s+x[1],0);
+S.push('<div class="sl hero"><div class="k">குடியியற் கல்வி</div><h1>தவணைக்கான செயற்பாடுகளும் மதிப்பீட்டுப் புள்ளிகளும்</h1><p>கருப்பொருள் · செயற்பாடு · கற்றல் பேறுகள் · பெற்றுக்கொள்ளக்கூடிய புள்ளிகள்</p><div class="tags"><span>முதலாந் தவணை</span><span>இரண்டாந் தவணை</span><span>மூன்றாந் தவணை</span></div></div>');
+S.push('<div class="sl"><div class="k">மூன்று தவணைகள்</div><h2>ஒரே பார்வையில் – தவணையைத் தொடுங்கள்</h2><div class="cards">'+T.map((t,i)=>'<div class="tc" data-go="'+[2,3,7][i]+'"><b>'+t.n+'</b><span class="n">'+tot(t)+'</span><small>மொத்தப் புள்ளிகள்</small><b style="font-size:28px">'+t.th+'</b><small>'+t.a.length+' செயற்பாடுகள் ▶</small></div>').join('')+'</div></div>');
+T.forEach((t,ti)=>{
+ S.push('<div class="sl" style="--cc:'+t.col+'"><div class="row"><span class="pill">'+t.n+'</span><div class="pts">மொத்தம்<b>'+tot(t)+'</b></div></div><h2>கருப்பொருள்: '+t.th+'</h2><div class="bars">'+t.a.map(a=>'<div class="br">'+a[0]+'<div><i style="--w:'+(a[1]*5)+'%">'+a[1]+'</i></div></div>').join('')+'</div></div>');
+ t.a.forEach((a,i)=>{if(!a[2])return;
+  S.push('<div class="sl" style="--cc:'+t.col+'"><div class="row"><span class="pill">'+t.n+' · '+t.th+'</span><div class="pts">புள்ளிகள்<b>'+a[1]+'</b></div></div><div class="k">செயற்பாடு '+String(i+1).padStart(2,'0')+'</div><h2>'+a[0]+'</h2><div class="box"><h3>கற்றல் பேறுகள்</h3><ul>'+a[2].map(o=>'<li>'+o+'</li>').join('')+'</ul></div><div class="row" style="font-size:28px"><b>காலம்:</b> '+String(a[3]).padStart(2,'0')+' பாடவேளைகள்</div><div class="dots2">'+t.a.map((_,j)=>'<i class="'+(j===i?'o':'')+'"></i>').join('')+'</div></div>')})});
+const st=document.getElementById('stage'),vw=document.getElementById('view');
+st.innerHTML=S.join('');const sl=[...st.children];let cur=0;
+function go(i){cur=Math.max(0,Math.min(sl.length-1,i));sl.forEach((s,j)=>s.classList.toggle('on',j===cur));
+ document.getElementById('n').textContent=(cur+1)+' / '+sl.length;document.getElementById('pi').style.width=((cur+1)/sl.length*100)+'%';
+ document.getElementById('pv').disabled=cur===0;document.getElementById('nx').disabled=cur===sl.length-1;try{history.replaceState(null,'','#s'+(cur+1))}catch(e){}}
+function fit(){const p=vw.clientWidth<vw.clientHeight*0.9,W=p?720:1280,H=p?1100:720;st.style.width=W+'px';st.style.height=H+'px';
+ const k=Math.min(vw.clientWidth/W,vw.clientHeight/H);st.style.transform='scale('+k+')';st.style.margin=((H*k-H)/2)+'px '+((W*k-W)/2)+'px'}
+pv.onclick=()=>go(cur-1);nx.onclick=()=>go(cur+1);
+fs.onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}};
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key))go(cur+1);if(['ArrowLeft','PageUp'].includes(e.key))go(cur-1);if(e.key==='Home')go(0);if(e.key==='End')go(sl.length-1)});
+let x0=null;vw.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});vw.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50)go(cur+(d<0?1:-1));x0=null});
+st.addEventListener('click',e=>{const c=e.target.closest('[data-go]');if(c)go(+c.dataset.go)});
+addEventListener('resize',fit);fit();const h=parseInt((location.hash||'').slice(2));go(h?h-1:0);
+</script></body></html>
